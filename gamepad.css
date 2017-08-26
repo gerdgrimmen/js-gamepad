@@ -1,0 +1,43 @@
+/* div {
+    width: 100px;
+    height: 100px;
+    background: red;
+    transition: all 2s;
+    transform: rotate(0deg);
+    -webkit-transition: all 2s; /* Safari 3.1 to 6.0 */
+} */
+
+/* div:hover {
+width: 300px;
+    transform: rotate(225deg);
+} */
+div.blahaha {
+/* width: 300px; */
+    transform: rotate(45deg) translate(12em) rotate(-45deg);
+}
+div.blahaha:hover {
+    background: green;
+}
+
+div#ball, div#ball2, #keyboardkey{
+    z-index: 100;
+}
+div#container div{
+    float: left;
+}
+
+div#container{
+    z-index: 0;
+    position: absolute;
+    top: 120px;
+    left: 220px;
+    width: 150px;
+    height: 150px;
+    background: #999;
+}
+
+.custombutton{
+    position: absolute;
+    border-radius: 4px;
+    border: 1px solid;
+}

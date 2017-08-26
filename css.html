@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title>CSS Tests für Gamepad-HTML</title>
+        <link rel="stylesheet" href="./gamepad.css">
+    </head>
+    <body>
+        <div id="class" class="foo bar"></div>
+        <script>
+            var div = document.getElementById('class')
+            console.log(div.classList.attributes);
+            div.classList.add('blurp');
+            console.log(div.classList);
+            div.classList.remove('bar');
+            console.log(div.classList);
+
+            var blahahabutton= document.createElement('button');
+            blahahabutton.textContent = 'blahaha';
+            blahahabutton.addEventListener('click', () =>{
+                if(div.classList.contains('blahaha')){
+                    div.classList.remove('blahaha');
+
+                }else{
+                    div.classList.add('blahaha');
+                }
+                console.log(div.classList);                    
+            });
+            document.body.appendChild(blahahabutton);
+        </script>
+    </body>
+</html>

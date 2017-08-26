@@ -1,0 +1,169 @@
+<html>
+<head>
+    <title>Gamepad Tests</title>
+    <link rel="stylesheet" href="./gamepad.css">  
+    <script>
+var terms_left = ["var", " ","=", "function" , "(", ")", "[", "]", "{", "}",";"];
+var terms_right = [];
+
+function customElement(tag, id, cls){
+    var obj = document.createElement(tag);
+    obj.id = (id) ? id : '' ;
+    if (cls) obj.classList.add(cls); else {}
+    return obj;
+}
+
+    window.addEventListener("gamepadconnected", function(e) {
+        var gp = navigator.getGamepads()[e.gamepad.index];
+        console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
+        gp.index, gp.id,
+        gp.buttons.length, gp.axes.length);
+        previousaxis = gp.axes;
+});
+var cursor1 = {x:"220",y:"220", target: ''};
+var cursor2 = {x:"420",y:"220"};
+var temppobj = [];
+
+function cursorCollision(obj, cursor){
+    var width = parseInt(obj.style.width.substring(0,obj.style.width.length-2));
+    var height = parseInt(obj.style.height.substring(0,obj.style.height.length-2));
+    var top = parseInt(obj.style.top.substring(0,obj.style.top.length-2));
+    var left = parseInt(obj.style.left.substring(0,obj.style.left.length-2));
+    // cursor.x;
+    // cursor.y;
+    //console.log( ' width:'+width+' height:'+height+' top:'+top+' left:'+left+'--'+(top+height)+'--'+(left+width)  );
+    if(cursor.y < top + height &&
+        cursor.y > top ){
+            if(cursor.x < left + width &&
+                cursor.x > left){
+                    obj.style.background = 'green';
+                    return obj;
+            }
+            else{
+                obj.style.background = 'white';
+            }
+    }
+    else{
+        obj.style.background = 'blue';
+    }
+    return '';
+}
+
+function blurp(e){
+    cursor1.target='';
+    var keaboardkey = document.getElementById('keyboardkey');
+    var ball = document.getElementById('ball');
+    var ball2 = document.getElementById('ball2');
+    var gp = navigator.getGamepads()[0];
+    var buttonvalues = '';
+    for ( button in gp.buttons){
+        buttonvalues += ' #'+button + ':'+gp.buttons[button].value;
+    }
+    // Quadrat:0, Kreuz:1, Kreis:2, Dreieck:3, L1:4, R1:5, L2:6, R2:7, Share:8, 
+    // Optioins:9, L3:10, R3:11, Playstation:12, TouchpadClick:13
+    // Digipad does not work
+    // console.log(buttonvalues);
+    var axisvalues = '';
+    for ( axis in gp.axes){
+        axisvalues += ' -'+axis + ' :'+gp.axes[axis];
+    }
+    
+    // axisvalues = "links-1/rechts+1:"+gp.axes[0] + "\noben-1/unten+1:" + gp.axes[1]+ "\nlinks-1/rechts+1:" + gp.axes[2]+ "\noben-1/unten+1:" + gp.axes[5];
+    // axisvalues = " Schulter Links2:"+gp.axes[3] + "\n Schulter Rechts2:" + gp.axes[4]+ "\n Bewegung?:" + gp.axes[6]+ "\n Bewegung?:" + gp.axes[7];
+    if(gp.axes[0] <= 0.1 && gp.axes[0] >= -0.1){
+        ball.style.left =  200 + 'px';
+        cursor1.x =  220;
+    }else{
+        ball.style.left = 200+ 290 * gp.axes[0]+ 'px';
+        cursor1.x = parseInt(220+ 290 * gp.axes[0]);
+    }
+    
+    if(gp.axes[1] <= 0.1 && gp.axes[1] >= -0.1){
+        ball.style.top = 200 + 'px';
+        cursor1.y = 220;
+    }else{
+        ball.style.top = 200 + 290 * gp.axes[1]+'px';
+        cursor1.y = parseInt(220 + 290 * gp.axes[1]);
+    }
+
+    if(gp.axes[2] <= 0.1 && gp.axes[2] >= -0.1){
+        ball2.style.left =  400 + 'px';
+    }else{
+        ball2.style.left = 400+ 90 * gp.axes[2]+ 'px';
+    }
+
+    if(gp.axes[5] <= 0.1 && gp.axes[5] >= -0.1){
+        ball2.style.top = 200 + 'px';
+    }else{
+        ball2.style.top = 200 + 90 * gp.axes[5]+'px';
+    }
+    cursor1.target = cursorCollision(keaboardkey, cursor1);
+    if(cursor1.target !== ''){
+        if(gp.buttons[6].value === 1){
+            document.getElementById('input').value += cursor1.target.innerHTML;
+        }
+    }
+    for ( key in temppobj){
+        cursor1.target = cursorCollision(temppobj[key], cursor1);
+        if(cursor1.target !== ''){
+            if(gp.buttons[6].value === 1){
+                document.getElementById('input').value += cursor1.target.innerHTML;
+                break;
+            }
+        }
+    }
+    //console.log(keaboardkey + ' ' + temppobj[0]);
+          // console.log(gp.buttons[6]);
+        
+    // console.log(ball2.style.top.substring(0,ball2.style.top.length-2));
+    // console.log(ball2.style.height.substring(0,ball2.style.height.length-2));
+    // console.log(ball2.style.height);
+    // console.log(ball2.style.top);
+    // console.log(ball2.style.left);
+    //    console.log(axisvalues);
+    //console.log('X:' + cursor1.x + ' Y:' + cursor1.y )
+  }
+  var FrameInterval = parseInt(1000/30);
+
+
+   setInterval(blurp, FrameInterval);
+
+    </script>
+</head>
+<body style="margin:auto;">
+    <div style="width:55px;height:55px;position:absolute;top:150px;left:150px;border:1px solid" id="keyboardkey">asd</div>    
+    <div style="width:40px;height:40px;background:cyan;border-radius:20px;position:absolute;top:200px;left:200px;" id="ball">1</div>
+    <div style="width:40px;height:40px;background:cyan;border-radius:20px;position:absolute;top:200px;left:400px;" id="ball2">2</div>
+    <input type="text" id="input">    
+<script>
+    var testbutton = document.createElement('button');
+testbutton.textContent = "testbutton"
+testbutton.addEventListener('click', () => {
+    
+    // document.getElementById('ball').removeAttribute('width');
+    // document.getElementById('ball').style.width = '400px';
+    // document.getElementById('keyboardkey').style.background = "red";
+    document.getElementById('input').value += document.getElementById('keyboardkey').innerHTML;
+});
+document.body.appendChild(testbutton);  
+
+document.getElementById('keyboardkey').addEventListener('click', () => {
+    document.getElementById('input').value += document.getElementById('keyboardkey').innerHTML;
+});
+    document.body.appendChild(customElement('div', 'container','containerclass'));
+    document.body.appendChild(customElement('button', 'myid','buttonclass'));
+    for(key in terms_left){
+        temppobj[key] = customElement('div', false, 'customButton');
+        temppobj[key].innerHTML = terms_left[key];
+        temppobj[key].style.top = 60 + 35 *key + 'px';
+        temppobj[key].style.left = 60 + 35*key + 'px';
+        temppobj[key].style.width = 38 + 'px';
+        temppobj[key].style.height = 38 + 'px';
+        // document.getElementById('container').appendChild(temppobj[key]);
+        document.body.appendChild(temppobj[key]);
+        //console.log(temppobj[key].getBoundingClientRect());
+    }
+
+    </script>
+</body>
+</html>
